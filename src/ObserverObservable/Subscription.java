@@ -4,6 +4,9 @@ import java.util.concurrent.Flow;
 
 class Subscription implements Flow.Subscription {
 
+    private static int id = 0;
+
+    private int currentId;
     private Observer observer;
     private Observable observable;
 
@@ -13,6 +16,7 @@ class Subscription implements Flow.Subscription {
     Subscription(Observer observer, Observable observable) {
         this.observer = observer;
         this.observable =  observable;
+        currentId = id++;
     }
 
     @Override
@@ -28,6 +32,10 @@ class Subscription implements Flow.Subscription {
     @Override
     public void cancel() {
         this.isCanceled = true;
+    }
+
+    int get_id() {
+        return this.currentId;
     }
 
     void next(Object next) {

@@ -1,12 +1,19 @@
 package ObserverObservable;
 
+import ObserverObservable.Interface.ObservableCallBackReceiver;
+
 import java.util.LinkedList;
 import java.util.concurrent.Flow;
 
 public class Observable implements Flow.Subscriber {
 
+    private ObservableCallBackReceiver callBackReceiver;
     private Subscription subscription = null;
     private LinkedList<Object> receivedItems = new LinkedList<>();
+
+    public Observable(ObservableCallBackReceiver callBackReceiver) {
+        this.callBackReceiver = callBackReceiver;
+    }
 
     @Override
     public void onSubscribe(Flow.Subscription subscription) {
@@ -18,6 +25,7 @@ public class Observable implements Flow.Subscriber {
     public void onNext(Object o) {
         this.receivedItems.add(o);
         this.subscription.request(1);
+        this.callBackReceiver.onNext(o);
     }
 
     @Override
@@ -28,7 +36,8 @@ public class Observable implements Flow.Subscriber {
 
     @Override
     public void onComplete() {
-        //TODO implement method onComplete
+        System.out.println("JFO---Stream/subscription with id="+this.subscription.get_id()+" has been completed!---JFO");
+        this.callBackReceiver.onComplete();
     }
 
     public void close() {
