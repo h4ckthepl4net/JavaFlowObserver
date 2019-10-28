@@ -10,9 +10,9 @@ class Subscription implements Flow.Subscription {
     private long requestedCount = 0;
     private boolean isCanceled = false;
 
-    Subscription(Flow.Publisher observer, Flow.Subscriber observable) {
-        this.observer = (Observer)observer;
-        this.observable =  (Observable)observable;
+    Subscription(Observer observer, Observable observable) {
+        this.observer = observer;
+        this.observable =  observable;
     }
 
     @Override

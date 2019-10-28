@@ -9,7 +9,7 @@ public class Observer implements Flow.Publisher {
 
     @Override
     public void subscribe(Flow.Subscriber subscriber) {
-        Subscription subscription = new Subscription(this, subscriber);
+        Subscription subscription = new Subscription(this, (Observable)subscriber);
         this.subscriptions.add(subscription);
         subscriber.onSubscribe(subscription);
     }
