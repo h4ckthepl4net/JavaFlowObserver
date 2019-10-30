@@ -32,6 +32,7 @@ class Subscription implements Flow.Subscription {
     @Override
     public void cancel() {
         this.isCanceled = true;
+        this.observer.closeSubscription(this.currentId);
     }
 
     int get_id() {

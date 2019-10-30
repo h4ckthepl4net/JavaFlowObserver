@@ -19,4 +19,8 @@ public class Observer implements Flow.Publisher {
             $sub.next(next);
         }
     }
+
+    public void closeSubscription(int id) {
+        subscriptions.removeIf((Subscription obj) -> obj.get_id() == id);
+    }
 }

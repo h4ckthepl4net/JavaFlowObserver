@@ -40,7 +40,12 @@ public class Observable implements Flow.Subscriber {
         this.callBackReceiver.onComplete();
     }
 
+    public LinkedList<Object> getReceivedItems() {
+        return this.receivedItems;
+    }
+
     public void close() {
         this.subscription.cancel();
     }
+
 }

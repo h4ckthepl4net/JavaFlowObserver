@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="javaFlowObserver:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/javaFlowObserver_jar</output-path>
+    <root id="archive" name="javaFlowObserver.jar">
+      <element id="module-output" name="javaFlowObserver" />
+    </root>
+  </artifact>
+</component>
