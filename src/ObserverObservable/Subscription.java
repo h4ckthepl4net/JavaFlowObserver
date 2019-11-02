@@ -23,36 +23,51 @@ class Subscription implements Flow.Subscription {
     public void request(long l) {
         if(l > 0) {
             this.requestedCount += l;
-        } else if(!this.isCanceled) {
-            this.observable.onError(new IllegalArgumentException("Argument of function Subscription::request cannot be less than 1",
-                                                                 new IllegalArgumentException()));
+        } else if (!this.isCanceled) {
+            this.observable.onError(new IllegalArgumentException("Subscription::request --- Argument of function Subscription::request cannot be less than 1",
+                                                                 new IllegalArgumentException("Invalid argument of Subscription::request")));
+        } else {
+            throw new IllegalArgumentException("Subscription::request --- Argument of function Subscription::request cannot be less than 1",
+                                                new IllegalArgumentException("Invalid argument of Subscription::request"));
         }
     }
 
     @Override
     public void cancel() {
-        this.isCanceled = true;
-        this.observer.closeSubscription(this.currentId);
-    }
-
-    int get_id() {
-        return this.currentId;
+        if(!this.isCanceled) {
+            this.isCanceled = true;
+            this.observable.onCancel();
+            this.observer.cancelSubscription(this.currentId);
+            this.observable = null;
+            this.observer = null;
+        } else {
+            throw new IllegalStateException("Subscription::cancel --- Cannot cancel subscription that is already canceled",
+                                            new IllegalStateException("Closing canceled subscription"));
+        }
     }
 
     void next(Object next) {
-        if(this.isValid()) {
-            this.requestedCount--;
-            this.observable.onNext(next);
+        if(!this.isCanceled) {
+            if (this.requestedCount > 0) {
+                this.requestedCount--;
+                this.observable.onNext(next);
+            }
+        } else {
+            throw new IllegalStateException("Subscription::next --- Cannot emit value on canceled subscriptions",
+                                            new IllegalStateException("Emitting on canceled subscription"));
         }
     }
 
     public void complete() {
         if(!this.isCanceled) {
             this.observable.onComplete();
+        } else {
+            throw new IllegalStateException("Subscription::complete --- Cannot complete subscriptions that are canceled",
+                                            new IllegalStateException("Completing canceled subscriptions"));
         }
     }
 
-    private boolean isValid() {
-        return this.isCanceled && this.requestedCount > 0;
+    int get_id() {
+        return this.currentId;
     }
 }
